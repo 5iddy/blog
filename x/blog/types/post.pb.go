@@ -23,9 +23,10 @@ var _ = math.Inf
 const _ = proto.GoGoProtoPackageIsVersion3 // please upgrade the proto package
 
 type Post struct {
-	PostId  uint64 `protobuf:"varint,1,opt,name=postId,proto3" json:"postId,omitempty"`
-	Title   string `protobuf:"bytes,2,opt,name=title,proto3" json:"title,omitempty"`
-	Content string `protobuf:"bytes,3,opt,name=content,proto3" json:"content,omitempty"`
+	Creator string `protobuf:"bytes,1,opt,name=creator,proto3" json:"creator,omitempty"`
+	Id      uint64 `protobuf:"varint,2,opt,name=id,proto3" json:"id,omitempty"`
+	Title   string `protobuf:"bytes,3,opt,name=title,proto3" json:"title,omitempty"`
+	Content string `protobuf:"bytes,4,opt,name=content,proto3" json:"content,omitempty"`
 }
 
 func (m *Post) Reset()         { *m = Post{} }
@@ -61,9 +62,16 @@ func (m *Post) XXX_DiscardUnknown() {
 
 var xxx_messageInfo_Post proto.InternalMessageInfo
 
-func (m *Post) GetPostId() uint64 {
+func (m *Post) GetCreator() string {
 	if m != nil {
-		return m.PostId
+		return m.Creator
+	}
+	return ""
+}
+
+func (m *Post) GetId() uint64 {
+	if m != nil {
+		return m.Id
 	}
 	return 0
 }
@@ -89,17 +97,18 @@ func init() {
 func init() { proto.RegisterFile("blog/post.proto", fileDescriptor_1da4a141e1c534d3) }
 
 var fileDescriptor_1da4a141e1c534d3 = []byte{
-	// 152 bytes of a gzipped FileDescriptorProto
+	// 165 bytes of a gzipped FileDescriptorProto
 	0x1f, 0x8b, 0x08, 0x00, 0x00, 0x00, 0x00, 0x00, 0x02, 0xff, 0xe2, 0xe2, 0x4f, 0xca, 0xc9, 0x4f,
 	0xd7, 0x2f, 0xc8, 0x2f, 0x2e, 0xd1, 0x2b, 0x28, 0xca, 0x2f, 0xc9, 0x17, 0xe2, 0x04, 0x09, 0xe8,
-	0x81, 0x08, 0x25, 0x3f, 0x2e, 0x96, 0x80, 0xfc, 0xe2, 0x12, 0x21, 0x31, 0x2e, 0x36, 0x90, 0x02,
-	0xcf, 0x14, 0x09, 0x46, 0x05, 0x46, 0x0d, 0x96, 0x20, 0x28, 0x4f, 0x48, 0x84, 0x8b, 0xb5, 0x24,
-	0xb3, 0x24, 0x27, 0x55, 0x82, 0x49, 0x81, 0x51, 0x83, 0x33, 0x08, 0xc2, 0x11, 0x92, 0xe0, 0x62,
-	0x4f, 0xce, 0xcf, 0x2b, 0x49, 0xcd, 0x2b, 0x91, 0x60, 0x06, 0x8b, 0xc3, 0xb8, 0x4e, 0xda, 0x27,
-	0x1e, 0xc9, 0x31, 0x5e, 0x78, 0x24, 0xc7, 0xf8, 0xe0, 0x91, 0x1c, 0xe3, 0x84, 0xc7, 0x72, 0x0c,
-	0x17, 0x1e, 0xcb, 0x31, 0xdc, 0x78, 0x2c, 0xc7, 0x10, 0x25, 0x08, 0x76, 0x45, 0x85, 0x3e, 0x98,
-	0x2a, 0xa9, 0x2c, 0x48, 0x2d, 0x4e, 0x62, 0x03, 0x3b, 0xc7, 0x18, 0x10, 0x00, 0x00, 0xff, 0xff,
-	0x44, 0x85, 0x09, 0xe1, 0xa1, 0x00, 0x00, 0x00,
+	0x81, 0x08, 0xa5, 0x04, 0x2e, 0x96, 0x80, 0xfc, 0xe2, 0x12, 0x21, 0x09, 0x2e, 0xf6, 0xe4, 0xa2,
+	0xd4, 0xc4, 0x92, 0xfc, 0x22, 0x09, 0x46, 0x05, 0x46, 0x0d, 0xce, 0x20, 0x18, 0x57, 0x88, 0x8f,
+	0x8b, 0x29, 0x33, 0x45, 0x82, 0x49, 0x81, 0x51, 0x83, 0x25, 0x88, 0x29, 0x33, 0x45, 0x48, 0x84,
+	0x8b, 0xb5, 0x24, 0xb3, 0x24, 0x27, 0x55, 0x82, 0x19, 0xac, 0x0e, 0xc2, 0x01, 0xeb, 0xcf, 0xcf,
+	0x2b, 0x49, 0xcd, 0x2b, 0x91, 0x60, 0x81, 0xea, 0x87, 0x70, 0x9d, 0xb4, 0x4f, 0x3c, 0x92, 0x63,
+	0xbc, 0xf0, 0x48, 0x8e, 0xf1, 0xc1, 0x23, 0x39, 0xc6, 0x09, 0x8f, 0xe5, 0x18, 0x2e, 0x3c, 0x96,
+	0x63, 0xb8, 0xf1, 0x58, 0x8e, 0x21, 0x4a, 0x10, 0xec, 0xae, 0x0a, 0x7d, 0x30, 0x55, 0x52, 0x59,
+	0x90, 0x5a, 0x9c, 0xc4, 0x06, 0x76, 0xa0, 0x31, 0x20, 0x00, 0x00, 0xff, 0xff, 0x3a, 0x31, 0xeb,
+	0x19, 0xb3, 0x00, 0x00, 0x00,
 }
 
 func (m *Post) Marshal() (dAtA []byte, err error) {
@@ -127,19 +136,26 @@ func (m *Post) MarshalToSizedBuffer(dAtA []byte) (int, error) {
 		copy(dAtA[i:], m.Content)
 		i = encodeVarintPost(dAtA, i, uint64(len(m.Content)))
 		i--
-		dAtA[i] = 0x1a
+		dAtA[i] = 0x22
 	}
 	if len(m.Title) > 0 {
 		i -= len(m.Title)
 		copy(dAtA[i:], m.Title)
 		i = encodeVarintPost(dAtA, i, uint64(len(m.Title)))
 		i--
-		dAtA[i] = 0x12
+		dAtA[i] = 0x1a
 	}
-	if m.PostId != 0 {
-		i = encodeVarintPost(dAtA, i, uint64(m.PostId))
+	if m.Id != 0 {
+		i = encodeVarintPost(dAtA, i, uint64(m.Id))
 		i--
-		dAtA[i] = 0x8
+		dAtA[i] = 0x10
+	}
+	if len(m.Creator) > 0 {
+		i -= len(m.Creator)
+		copy(dAtA[i:], m.Creator)
+		i = encodeVarintPost(dAtA, i, uint64(len(m.Creator)))
+		i--
+		dAtA[i] = 0xa
 	}
 	return len(dAtA) - i, nil
 }
@@ -161,8 +177,12 @@ func (m *Post) Size() (n int) {
 	}
 	var l int
 	_ = l
-	if m.PostId != 0 {
-		n += 1 + sovPost(uint64(m.PostId))
+	l = len(m.Creator)
+	if l > 0 {
+		n += 1 + l + sovPost(uint64(l))
+	}
+	if m.Id != 0 {
+		n += 1 + sovPost(uint64(m.Id))
 	}
 	l = len(m.Title)
 	if l > 0 {
@@ -211,10 +231,10 @@ func (m *Post) Unmarshal(dAtA []byte) error {
 		}
 		switch fieldNum {
 		case 1:
-			if wireType != 0 {
-				return fmt.Errorf("proto: wrong wireType = %d for field PostId", wireType)
+			if wireType != 2 {
+				return fmt.Errorf("proto: wrong wireType = %d for field Creator", wireType)
 			}
-			m.PostId = 0
+			var stringLen uint64
 			for shift := uint(0); ; shift += 7 {
 				if shift >= 64 {
 					return ErrIntOverflowPost
@@ -224,12 +244,44 @@ func (m *Post) Unmarshal(dAtA []byte) error {
 				}
 				b := dAtA[iNdEx]
 				iNdEx++
-				m.PostId |= uint64(b&0x7F) << shift
+				stringLen |= uint64(b&0x7F) << shift
 				if b < 0x80 {
 					break
 				}
 			}
+			intStringLen := int(stringLen)
+			if intStringLen < 0 {
+				return ErrInvalidLengthPost
+			}
+			postIndex := iNdEx + intStringLen
+			if postIndex < 0 {
+				return ErrInvalidLengthPost
+			}
+			if postIndex > l {
+				return io.ErrUnexpectedEOF
+			}
+			m.Creator = string(dAtA[iNdEx:postIndex])
+			iNdEx = postIndex
 		case 2:
+			if wireType != 0 {
+				return fmt.Errorf("proto: wrong wireType = %d for field Id", wireType)
+			}
+			m.Id = 0
+			for shift := uint(0); ; shift += 7 {
+				if shift >= 64 {
+					return ErrIntOverflowPost
+				}
+				if iNdEx >= l {
+					return io.ErrUnexpectedEOF
+				}
+				b := dAtA[iNdEx]
+				iNdEx++
+				m.Id |= uint64(b&0x7F) << shift
+				if b < 0x80 {
+					break
+				}
+			}
+		case 3:
 			if wireType != 2 {
 				return fmt.Errorf("proto: wrong wireType = %d for field Title", wireType)
 			}
@@ -261,7 +313,7 @@ func (m *Post) Unmarshal(dAtA []byte) error {
 			}
 			m.Title = string(dAtA[iNdEx:postIndex])
 			iNdEx = postIndex
-		case 3:
+		case 4:
 			if wireType != 2 {
 				return fmt.Errorf("proto: wrong wireType = %d for field Content", wireType)
 			}

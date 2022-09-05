@@ -5,23 +5,27 @@ import { util, configure, Writer, Reader } from "protobufjs/minimal";
 export const protobufPackage = "blog.blog";
 
 export interface Post {
-  postId: number;
+  creator: string;
+  id: number;
   title: string;
   content: string;
 }
 
-const basePost: object = { postId: 0, title: "", content: "" };
+const basePost: object = { creator: "", id: 0, title: "", content: "" };
 
 export const Post = {
   encode(message: Post, writer: Writer = Writer.create()): Writer {
-    if (message.postId !== 0) {
-      writer.uint32(8).uint64(message.postId);
+    if (message.creator !== "") {
+      writer.uint32(10).string(message.creator);
+    }
+    if (message.id !== 0) {
+      writer.uint32(16).uint64(message.id);
     }
     if (message.title !== "") {
-      writer.uint32(18).string(message.title);
+      writer.uint32(26).string(message.title);
     }
     if (message.content !== "") {
-      writer.uint32(26).string(message.content);
+      writer.uint32(34).string(message.content);
     }
     return writer;
   },
@@ -34,12 +38,15 @@ export const Post = {
       const tag = reader.uint32();
       switch (tag >>> 3) {
         case 1:
-          message.postId = longToNumber(reader.uint64() as Long);
+          message.creator = reader.string();
           break;
         case 2:
-          message.title = reader.string();
+          message.id = longToNumber(reader.uint64() as Long);
           break;
         case 3:
+          message.title = reader.string();
+          break;
+        case 4:
           message.content = reader.string();
           break;
         default:
@@ -52,10 +59,15 @@ export const Post = {
 
   fromJSON(object: any): Post {
     const message = { ...basePost } as Post;
-    if (object.postId !== undefined && object.postId !== null) {
-      message.postId = Number(object.postId);
+    if (object.creator !== undefined && object.creator !== null) {
+      message.creator = String(object.creator);
     } else {
-      message.postId = 0;
+      message.creator = "";
+    }
+    if (object.id !== undefined && object.id !== null) {
+      message.id = Number(object.id);
+    } else {
+      message.id = 0;
     }
     if (object.title !== undefined && object.title !== null) {
       message.title = String(object.title);
@@ -72,7 +84,8 @@ export const Post = {
 
   toJSON(message: Post): unknown {
     const obj: any = {};
-    message.postId !== undefined && (obj.postId = message.postId);
+    message.creator !== undefined && (obj.creator = message.creator);
+    message.id !== undefined && (obj.id = message.id);
     message.title !== undefined && (obj.title = message.title);
     message.content !== undefined && (obj.content = message.content);
     return obj;
@@ -80,10 +93,15 @@ export const Post = {
 
   fromPartial(object: DeepPartial<Post>): Post {
     const message = { ...basePost } as Post;
-    if (object.postId !== undefined && object.postId !== null) {
-      message.postId = object.postId;
+    if (object.creator !== undefined && object.creator !== null) {
+      message.creator = object.creator;
     } else {
-      message.postId = 0;
+      message.creator = "";
+    }
+    if (object.id !== undefined && object.id !== null) {
+      message.id = object.id;
+    } else {
+      message.id = 0;
     }
     if (object.title !== undefined && object.title !== null) {
       message.title = object.title;
