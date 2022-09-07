@@ -9,13 +9,6 @@ import (
 	"blog/x/blog/types"
 )
 
-// func (k Keeper) AppendPost() uint64 {
-//   count := k.GetPostCount()
-//   store.Set()
-//   k.SetPostCount()
-//   return count
-// }
-
 func (k Keeper) GetPostCount(ctx sdk.Context) uint64 {
 	// Get the store using storeKey (which is "blog") and PostCountKey (which is "Post-count-")
 	store := prefix.NewStore(ctx.KVStore(k.storeKey), []byte(types.PostCountKey))
