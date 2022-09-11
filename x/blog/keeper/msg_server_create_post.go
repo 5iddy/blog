@@ -20,5 +20,9 @@ func (k msgServer) CreatePost(goCtx context.Context, msg *types.MsgCreatePost) (
 
 	id := k.AppendPost(ctx, post)
 
+	if err := k.AppendPostIdToAuthorPosts(ctx, msg.Creator, id); err != nil {
+		return nil, err
+	}
+
 	return &types.MsgCreatePostResponse{Id: id}, nil
 }

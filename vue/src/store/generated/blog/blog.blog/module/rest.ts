@@ -9,10 +9,22 @@
  * ---------------------------------------------------------------
  */
 
+export interface BlogAuthorPosts {
+  index?: string;
+  postIds?: string[];
+  creator?: string;
+}
+
+export type BlogMsgCreateAuthorPostsResponse = object;
+
 export interface BlogMsgCreatePostResponse {
   /** @format uint64 */
   id?: string;
 }
+
+export type BlogMsgDeleteAuthorPostsResponse = object;
+
+export type BlogMsgUpdateAuthorPostsResponse = object;
 
 /**
  * Params defines the parameters for the module.
@@ -26,6 +38,25 @@ export interface BlogPost {
   id?: string;
   title?: string;
   content?: string;
+}
+
+export interface BlogQueryAllAuthorPostsResponse {
+  authorPosts?: BlogAuthorPosts[];
+
+  /**
+   * PageResponse is to be embedded in gRPC response messages where the
+   * corresponding request message has used PageRequest.
+   *
+   *  message SomeResponse {
+   *          repeated Bar results = 1;
+   *          PageResponse page = 2;
+   *  }
+   */
+  pagination?: V1Beta1PageResponse;
+}
+
+export interface BlogQueryGetAuthorPostsResponse {
+  authorPosts?: BlogAuthorPosts;
 }
 
 /**
@@ -99,6 +130,13 @@ export interface V1Beta1PageRequest {
    * is set.
    */
   count_total?: boolean;
+
+  /**
+   * reverse is set to true if results are to be returned in the descending order.
+   *
+   * Since: cosmos-sdk 0.43
+   */
+  reverse?: boolean;
 }
 
 /**
@@ -310,10 +348,63 @@ export class HttpClient<SecurityDataType = unknown> {
 }
 
 /**
- * @title blog/genesis.proto
+ * @title blog/author_posts.proto
  * @version version not set
  */
 export class Api<SecurityDataType extends unknown> extends HttpClient<SecurityDataType> {
+  /**
+   * No description
+   *
+   * @tags Query
+   * @name QueryAuthorPostsAll
+   * @summary Queries a list of AuthorPosts items.
+   * @request GET:/blog/blog/author_posts
+   */
+  queryAuthorPostsAll = (
+    query?: {
+      "pagination.key"?: string;
+      "pagination.offset"?: string;
+      "pagination.limit"?: string;
+      "pagination.count_total"?: boolean;
+      "pagination.reverse"?: boolean;
+    },
+    params: RequestParams = {},
+  ) =>
+    this.request<BlogQueryAllAuthorPostsResponse, RpcStatus>({
+      path: `/blog/blog/author_posts`,
+      method: "GET",
+      query: query,
+      format: "json",
+      ...params,
+    });
+
+  /**
+   * No description
+   *
+   * @tags Query
+   * @name QueryAuthorPosts
+   * @summary Queries a AuthorPosts by index.
+   * @request GET:/blog/blog/author_posts/{index}
+   */
+  queryAuthorPosts = (
+    index: string,
+    query?: {
+      "pagination.key"?: string;
+      "pagination.offset"?: string;
+      "pagination.limit"?: string;
+      "pagination.count_total"?: boolean;
+      "pagination.reverse"?: boolean;
+    },
+    params: RequestParams = {},
+  ) =>
+    this.request<BlogQueryGetAuthorPostsResponse, RpcStatus>({
+      path: `/blog/blog/author_posts/${index}`,
+      method: "GET",
+      query: query,
+      format: "json",
+      ...params,
+    });
+
   /**
    * No description
    *
@@ -344,6 +435,7 @@ export class Api<SecurityDataType extends unknown> extends HttpClient<SecurityDa
       "pagination.offset"?: string;
       "pagination.limit"?: string;
       "pagination.count_total"?: boolean;
+      "pagination.reverse"?: boolean;
     },
     params: RequestParams = {},
   ) =>

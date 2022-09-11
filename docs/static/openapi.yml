@@ -4,69 +4,31 @@ info:
   name: ''
   description: ''
 paths:
-  /blog/blog/params:
+  /blog/blog/author_posts:
     get:
-      summary: Parameters queries the parameters of the module.
-      operationId: BlogBlogParams
+      summary: Queries a list of AuthorPosts items.
+      operationId: BlogBlogAuthorPostsAll
       responses:
         '200':
           description: A successful response.
           schema:
             type: object
             properties:
-              params:
-                description: params holds all the parameters of this module.
-                type: object
-            description: >-
-              QueryParamsResponse is response type for the Query/Params RPC
-              method.
-        default:
-          description: An unexpected error response.
-          schema:
-            type: object
-            properties:
-              code:
-                type: integer
-                format: int32
-              message:
-                type: string
-              details:
+              authorPosts:
                 type: array
                 items:
                   type: object
                   properties:
-                    '@type':
+                    index:
                       type: string
-                  additionalProperties: {}
-      tags:
-        - Query
-  /blog/blog/posts:
-    get:
-      summary: Queries a list of Posts items.
-      operationId: BlogBlogPosts
-      responses:
-        '200':
-          description: A successful response.
-          schema:
-            type: object
-            properties:
-              Post:
-                type: array
-                items:
-                  type: object
-                  properties:
+                    postIds:
+                      type: array
+                      items:
+                        type: string
+                        format: uint64
                     creator:
                       type: string
-                    id:
-                      type: string
-                      format: uint64
-                    title:
-                      type: string
-                    content:
-                      type: string
-                title: Returning a list of posts
               pagination:
-                title: Adding pagination to response
                 type: object
                 properties:
                   next_key:
@@ -158,13 +120,252 @@ paths:
           in: query
           required: false
           type: boolean
-        - name: pagination.reverse
+      tags:
+        - Query
+  '/blog/blog/author_posts/{index}':
+    get:
+      summary: Queries a AuthorPosts by index.
+      operationId: BlogBlogAuthorPosts
+      responses:
+        '200':
+          description: A successful response.
+          schema:
+            type: object
+            properties:
+              authorPosts:
+                type: object
+                properties:
+                  index:
+                    type: string
+                  postIds:
+                    type: array
+                    items:
+                      type: string
+                      format: uint64
+                  creator:
+                    type: string
+        default:
+          description: An unexpected error response.
+          schema:
+            type: object
+            properties:
+              code:
+                type: integer
+                format: int32
+              message:
+                type: string
+              details:
+                type: array
+                items:
+                  type: object
+                  properties:
+                    '@type':
+                      type: string
+                  additionalProperties: {}
+      parameters:
+        - name: index
+          in: path
+          required: true
+          type: string
+        - name: pagination.key
+          description: |-
+            key is a value returned in PageResponse.next_key to begin
+            querying the next page most efficiently. Only one of offset or key
+            should be set.
+          in: query
+          required: false
+          type: string
+          format: byte
+        - name: pagination.offset
           description: >-
-            reverse is set to true if results are to be returned in the
-            descending order.
+            offset is a numeric offset that can be used when key is unavailable.
 
+            It is less efficient than using key. Only one of offset or key
+            should
 
-            Since: cosmos-sdk 0.43
+            be set.
+          in: query
+          required: false
+          type: string
+          format: uint64
+        - name: pagination.limit
+          description: >-
+            limit is the total number of results to be returned in the result
+            page.
+
+            If left empty it will default to a value to be set by each app.
+          in: query
+          required: false
+          type: string
+          format: uint64
+        - name: pagination.count_total
+          description: >-
+            count_total is set to true  to indicate that the result set should
+            include
+
+            a count of the total number of items available for pagination in
+            UIs.
+
+            count_total is only respected when offset is used. It is ignored
+            when key
+
+            is set.
+          in: query
+          required: false
+          type: boolean
+      tags:
+        - Query
+  /blog/blog/params:
+    get:
+      summary: Parameters queries the parameters of the module.
+      operationId: BlogBlogParams
+      responses:
+        '200':
+          description: A successful response.
+          schema:
+            type: object
+            properties:
+              params:
+                description: params holds all the parameters of this module.
+                type: object
+            description: >-
+              QueryParamsResponse is response type for the Query/Params RPC
+              method.
+        default:
+          description: An unexpected error response.
+          schema:
+            type: object
+            properties:
+              code:
+                type: integer
+                format: int32
+              message:
+                type: string
+              details:
+                type: array
+                items:
+                  type: object
+                  properties:
+                    '@type':
+                      type: string
+                  additionalProperties: {}
+      tags:
+        - Query
+  /blog/blog/posts:
+    get:
+      summary: Queries a list of Posts items.
+      operationId: BlogBlogPosts
+      responses:
+        '200':
+          description: A successful response.
+          schema:
+            type: object
+            properties:
+              Post:
+                type: array
+                items:
+                  type: object
+                  properties:
+                    creator:
+                      type: string
+                    id:
+                      type: string
+                      format: uint64
+                    title:
+                      type: string
+                    content:
+                      type: string
+                title: Returning a list of posts
+              pagination:
+                type: object
+                properties:
+                  next_key:
+                    type: string
+                    format: byte
+                    title: |-
+                      next_key is the key to be passed to PageRequest.key to
+                      query the next page most efficiently
+                  total:
+                    type: string
+                    format: uint64
+                    title: >-
+                      total is total number of results available if
+                      PageRequest.count_total
+
+                      was set, its value is undefined otherwise
+                description: >-
+                  PageResponse is to be embedded in gRPC response messages where
+                  the
+
+                  corresponding request message has used PageRequest.
+
+                   message SomeResponse {
+                           repeated Bar results = 1;
+                           PageResponse page = 2;
+                   }
+                title: Adding pagination to response
+        default:
+          description: An unexpected error response.
+          schema:
+            type: object
+            properties:
+              code:
+                type: integer
+                format: int32
+              message:
+                type: string
+              details:
+                type: array
+                items:
+                  type: object
+                  properties:
+                    '@type':
+                      type: string
+                  additionalProperties: {}
+      parameters:
+        - name: pagination.key
+          description: |-
+            key is a value returned in PageResponse.next_key to begin
+            querying the next page most efficiently. Only one of offset or key
+            should be set.
+          in: query
+          required: false
+          type: string
+          format: byte
+        - name: pagination.offset
+          description: >-
+            offset is a numeric offset that can be used when key is unavailable.
+
+            It is less efficient than using key. Only one of offset or key
+            should
+
+            be set.
+          in: query
+          required: false
+          type: string
+          format: uint64
+        - name: pagination.limit
+          description: >-
+            limit is the total number of results to be returned in the result
+            page.
+
+            If left empty it will default to a value to be set by each app.
+          in: query
+          required: false
+          type: string
+          format: uint64
+        - name: pagination.count_total
+          description: >-
+            count_total is set to true  to indicate that the result set should
+            include
+
+            a count of the total number of items available for pagination in
+            UIs.
+
+            count_total is only respected when offset is used. It is ignored
+            when key
+
+            is set.
           in: query
           required: false
           type: boolean
@@ -30539,12 +30740,30 @@ paths:
       tags:
         - Query
 definitions:
+  blog.blog.AuthorPosts:
+    type: object
+    properties:
+      index:
+        type: string
+      postIds:
+        type: array
+        items:
+          type: string
+          format: uint64
+      creator:
+        type: string
+  blog.blog.MsgCreateAuthorPostsResponse:
+    type: object
   blog.blog.MsgCreatePostResponse:
     type: object
     properties:
       id:
         type: string
         format: uint64
+  blog.blog.MsgDeleteAuthorPostsResponse:
+    type: object
+  blog.blog.MsgUpdateAuthorPostsResponse:
+    type: object
   blog.blog.Params:
     type: object
     description: Params defines the parameters for the module.
@@ -30560,6 +30779,63 @@ definitions:
         type: string
       content:
         type: string
+  blog.blog.QueryAllAuthorPostsResponse:
+    type: object
+    properties:
+      authorPosts:
+        type: array
+        items:
+          type: object
+          properties:
+            index:
+              type: string
+            postIds:
+              type: array
+              items:
+                type: string
+                format: uint64
+            creator:
+              type: string
+      pagination:
+        type: object
+        properties:
+          next_key:
+            type: string
+            format: byte
+            title: |-
+              next_key is the key to be passed to PageRequest.key to
+              query the next page most efficiently
+          total:
+            type: string
+            format: uint64
+            title: >-
+              total is total number of results available if
+              PageRequest.count_total
+
+              was set, its value is undefined otherwise
+        description: |-
+          PageResponse is to be embedded in gRPC response messages where the
+          corresponding request message has used PageRequest.
+
+           message SomeResponse {
+                   repeated Bar results = 1;
+                   PageResponse page = 2;
+           }
+  blog.blog.QueryGetAuthorPostsResponse:
+    type: object
+    properties:
+      authorPosts:
+        type: object
+        properties:
+          index:
+            type: string
+          postIds:
+            type: array
+            items:
+              type: string
+              format: uint64
+          creator:
+            type: string
   blog.blog.QueryParamsResponse:
     type: object
     properties:
@@ -30586,7 +30862,6 @@ definitions:
               type: string
         title: Returning a list of posts
       pagination:
-        title: Adding pagination to response
         type: object
         properties:
           next_key:
@@ -30611,6 +30886,7 @@ definitions:
                    repeated Bar results = 1;
                    PageResponse page = 2;
            }
+        title: Adding pagination to response
   cosmos.base.query.v1beta1.PageRequest:
     type: object
     properties:

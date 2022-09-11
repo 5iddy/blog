@@ -1,13 +1,17 @@
 syntax = "proto3";
 package blog.blog;
 
+import "blog/author_posts.proto";
 // this line is used by starport scaffolding # proto/tx/import
 
 option go_package = "blog/x/blog/types";
 
 // Msg defines the Msg service.
 service Msg {
-      rpc CreatePost(MsgCreatePost) returns (MsgCreatePostResponse);
+  rpc CreatePost(MsgCreatePost) returns (MsgCreatePostResponse);
+  rpc CreateAuthorPosts(MsgCreateAuthorPosts) returns (MsgCreateAuthorPostsResponse);
+  rpc UpdateAuthorPosts(MsgUpdateAuthorPosts) returns (MsgUpdateAuthorPostsResponse);
+  rpc DeleteAuthorPosts(MsgDeleteAuthorPosts) returns (MsgDeleteAuthorPostsResponse);
 // this line is used by starport scaffolding # proto/tx/rpc
 }
 
@@ -20,5 +24,27 @@ message MsgCreatePost {
 message MsgCreatePostResponse {
   uint64 id = 1;
 }
+
+message MsgCreateAuthorPosts {
+  string creator = 1;
+  string index = 2;
+
+  repeated uint64 posts = 3;
+}
+message MsgCreateAuthorPostsResponse {}
+
+message MsgUpdateAuthorPosts {
+  string creator = 1;
+  string index = 2;
+
+  repeated uint64 posts = 3;
+}
+message MsgUpdateAuthorPostsResponse {}
+
+message MsgDeleteAuthorPosts {
+  string creator = 1;
+  string index = 2;
+}
+message MsgDeleteAuthorPostsResponse {}
 
 // this line is used by starport scaffolding # proto/tx/message

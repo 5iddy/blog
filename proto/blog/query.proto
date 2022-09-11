@@ -6,6 +6,7 @@ import "google/api/annotations.proto";
 import "cosmos/base/query/v1beta1/pagination.proto";
 import "blog/params.proto";
 import "blog/post.proto";
+import "blog/author_posts.proto";
 // this line is used by starport scaffolding # 1
 
 option go_package = "blog/x/blog/types";
@@ -19,6 +20,16 @@ service Query {
   // Queries a list of Posts items.
 	rpc Posts(QueryPostsRequest) returns (QueryPostsResponse) {
 		option (google.api.http).get = "/blog/blog/posts";
+	}
+
+	// Queries a AuthorPosts by index.
+	rpc AuthorPosts(QueryGetAuthorPostsRequest) returns (QueryGetAuthorPostsResponse) {
+		option (google.api.http).get = "/blog/blog/author_posts/{index}";
+	}
+
+	// Queries a list of AuthorPosts items.
+	rpc AuthorPostsAll(QueryAllAuthorPostsRequest) returns (QueryAllAuthorPostsResponse) {
+		option (google.api.http).get = "/blog/blog/author_posts";
 	}
 
 // this line is used by starport scaffolding # 2
@@ -44,6 +55,24 @@ message QueryPostsResponse {
 
   // Adding pagination to response
   cosmos.base.query.v1beta1.PageResponse pagination = 2;
+}
+
+message QueryGetAuthorPostsRequest {
+	string index = 1;
+	cosmos.base.query.v1beta1.PageRequest pagination = 2;
+}
+
+message QueryGetAuthorPostsResponse {
+	AuthorPosts authorPosts = 1 [(gogoproto.nullable) = false];
+}
+
+message QueryAllAuthorPostsRequest {
+	cosmos.base.query.v1beta1.PageRequest pagination = 1;
+}
+
+message QueryAllAuthorPostsResponse {
+	repeated AuthorPosts authorPosts = 1 [(gogoproto.nullable) = false];
+	cosmos.base.query.v1beta1.PageResponse pagination = 2;
 }
 
 // this line is used by starport scaffolding # 3

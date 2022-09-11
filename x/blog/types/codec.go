@@ -9,12 +9,20 @@ import (
 
 func RegisterCodec(cdc *codec.LegacyAmino) {
 	cdc.RegisterConcrete(&MsgCreatePost{}, "blog/CreatePost", nil)
+	cdc.RegisterConcrete(&MsgCreateAuthorPosts{}, "blog/CreateAuthorPosts", nil)
+	cdc.RegisterConcrete(&MsgUpdateAuthorPosts{}, "blog/UpdateAuthorPosts", nil)
+	cdc.RegisterConcrete(&MsgDeleteAuthorPosts{}, "blog/DeleteAuthorPosts", nil)
 	// this line is used by starport scaffolding # 2
 }
 
 func RegisterInterfaces(registry cdctypes.InterfaceRegistry) {
 	registry.RegisterImplementations((*sdk.Msg)(nil),
 		&MsgCreatePost{},
+	)
+	registry.RegisterImplementations((*sdk.Msg)(nil),
+		&MsgCreateAuthorPosts{},
+		&MsgUpdateAuthorPosts{},
+		&MsgDeleteAuthorPosts{},
 	)
 	// this line is used by starport scaffolding # 3
 

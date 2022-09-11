@@ -28,6 +28,18 @@ const (
 	// TODO: Determine the simulation weight value
 	defaultWeightMsgCreatePost int = 100
 
+	opWeightMsgCreateAuthorPosts = "op_weight_msg_author_posts"
+	// TODO: Determine the simulation weight value
+	defaultWeightMsgCreateAuthorPosts int = 100
+
+	opWeightMsgUpdateAuthorPosts = "op_weight_msg_author_posts"
+	// TODO: Determine the simulation weight value
+	defaultWeightMsgUpdateAuthorPosts int = 100
+
+	opWeightMsgDeleteAuthorPosts = "op_weight_msg_author_posts"
+	// TODO: Determine the simulation weight value
+	defaultWeightMsgDeleteAuthorPosts int = 100
+
 	// this line is used by starport scaffolding # simapp/module/const
 )
 
@@ -39,6 +51,16 @@ func (AppModule) GenerateGenesisState(simState *module.SimulationState) {
 	}
 	blogGenesis := types.GenesisState{
 		Params: types.DefaultParams(),
+		AuthorPostsList: []types.AuthorPosts{
+			{
+				Creator: sample.AccAddress(),
+				Index:   "0",
+			},
+			{
+				Creator: sample.AccAddress(),
+				Index:   "1",
+			},
+		},
 		// this line is used by starport scaffolding # simapp/module/genesisState
 	}
 	simState.GenState[types.ModuleName] = simState.Cdc.MustMarshalJSON(&blogGenesis)
@@ -71,6 +93,39 @@ func (am AppModule) WeightedOperations(simState module.SimulationState) []simtyp
 	operations = append(operations, simulation.NewWeightedOperation(
 		weightMsgCreatePost,
 		blogsimulation.SimulateMsgCreatePost(am.accountKeeper, am.bankKeeper, am.keeper),
+	))
+
+	var weightMsgCreateAuthorPosts int
+	simState.AppParams.GetOrGenerate(simState.Cdc, opWeightMsgCreateAuthorPosts, &weightMsgCreateAuthorPosts, nil,
+		func(_ *rand.Rand) {
+			weightMsgCreateAuthorPosts = defaultWeightMsgCreateAuthorPosts
+		},
+	)
+	operations = append(operations, simulation.NewWeightedOperation(
+		weightMsgCreateAuthorPosts,
+		blogsimulation.SimulateMsgCreateAuthorPosts(am.accountKeeper, am.bankKeeper, am.keeper),
+	))
+
+	var weightMsgUpdateAuthorPosts int
+	simState.AppParams.GetOrGenerate(simState.Cdc, opWeightMsgUpdateAuthorPosts, &weightMsgUpdateAuthorPosts, nil,
+		func(_ *rand.Rand) {
+			weightMsgUpdateAuthorPosts = defaultWeightMsgUpdateAuthorPosts
+		},
+	)
+	operations = append(operations, simulation.NewWeightedOperation(
+		weightMsgUpdateAuthorPosts,
+		blogsimulation.SimulateMsgUpdateAuthorPosts(am.accountKeeper, am.bankKeeper, am.keeper),
+	))
+
+	var weightMsgDeleteAuthorPosts int
+	simState.AppParams.GetOrGenerate(simState.Cdc, opWeightMsgDeleteAuthorPosts, &weightMsgDeleteAuthorPosts, nil,
+		func(_ *rand.Rand) {
+			weightMsgDeleteAuthorPosts = defaultWeightMsgDeleteAuthorPosts
+		},
+	)
+	operations = append(operations, simulation.NewWeightedOperation(
+		weightMsgDeleteAuthorPosts,
+		blogsimulation.SimulateMsgDeleteAuthorPosts(am.accountKeeper, am.bankKeeper, am.keeper),
 	))
 
 	// this line is used by starport scaffolding # simapp/module/operation

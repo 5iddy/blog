@@ -1,0 +1,11 @@
+syntax = "proto3";
+package blog.blog;
+
+option go_package = "blog/x/blog/types";
+
+message AuthorPosts {
+  string index = 1; 
+  repeated uint64 postIds = 2; 
+  string creator = 3;
+}
+

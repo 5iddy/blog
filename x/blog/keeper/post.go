@@ -67,3 +67,14 @@ func (k Keeper) AppendPost(ctx sdk.Context, post types.Post) uint64 {
 	k.SetPostCount(ctx, count+1)
 	return count
 }
+
+func (k Keeper) DeletePost(ctx sdk.Context, postId uint64) {
+	// Get the store using storeKey (which is "blog") and PostCountKey (which is "Post-count-")
+	store := prefix.NewStore(ctx.KVStore(k.storeKey), []byte(types.PostCountKey))
+
+	// Convert the post ID into bytes
+	byteKey := make([]byte, 8)
+	binary.BigEndian.PutUint64(byteKey, postId)
+
+	store.Delete(byteKey)
+}
