@@ -31324,6 +31324,8 @@ definitions:
                 }
   blog.nameservice.MsgBuyNameResponse:
     type: object
+  blog.nameservice.MsgSetNameResponse:
+    type: object
   blog.nameservice.Params:
     type: object
     description: Params defines the parameters for the module.
