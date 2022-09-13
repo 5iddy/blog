@@ -7,7 +7,7 @@ option go_package = "blog/x/nameservice/types";
 
 // Msg defines the Msg service.
 service Msg {
-      rpc BuyName(MsgBuyName) returns (MsgBuyNameResponse);
+  rpc BuyName(MsgBuyName) returns (MsgBuyNameResponse);
   rpc SetName(MsgSetName) returns (MsgSetNameResponse);
   rpc DeleteName(MsgDeleteName) returns (MsgDeleteNameResponse);
 // this line is used by starport scaffolding # proto/tx/rpc
