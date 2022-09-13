@@ -31324,6 +31324,8 @@ definitions:
                 }
   blog.nameservice.MsgBuyNameResponse:
     type: object
+  blog.nameservice.MsgDeleteNameResponse:
+    type: object
   blog.nameservice.MsgSetNameResponse:
     type: object
   blog.nameservice.Params:
